@@ -1,4 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Height } from '@material-ui/icons'
 import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -10,11 +11,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: '1 1 0%'
   },
   headerContainer: {
-    marginBottom: 12
+    marginBottom: 12,
+    display: "flex",
+    alignItems:"center",
+  },
+  headerContainer2: {
+    display: "flex",
+    alignItems:"center",
+    justifyContent:"end"
   },
   header: {
     ...typography.heading4,
-    color: colors.white.main
+    color: colors.white.main,
+
   },
   innerWrapper: {
     borderRadius: 8,
@@ -22,6 +31,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     position: 'relative',
     flex: '1 1 0%'
+  },
+  heatmapSwitchTileTypography: {
+    display: "flex",
+    alignItems:"center",
+    color: colors.invariant.textGrey,
+    fontWeight: 400,
+    fontSize:"14px"
+  },
+  heatmapSwitchTile: {
+    display: "flex"
+  },
+  switchBase: {
+    color: colors.white.main,
+    '&$checked': {
+      color: colors.white.main,
+    },
+  },
+  checked: {},
+  track: {
+    backgroundColor: 'white',
   },
   plot: {
     width: '100%',
@@ -178,6 +207,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxSizing: 'border-box',
     paddingTop: 3,
     cursor: 'default'
+  },
+  volumeHeatmapIcon: {
+    marginLeft: 5,
+    height: 12,
+    width: 12,
+    fontSize: 9,
+//bigger size then spec to improve readability
+    borderRadius: '50%',
+    lineHeight: '12px',
+    fontWeight: 400,
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    paddingRight: 1,
+    cursor: 'default',
+    border: `1px solid ${colors.invariant.lightGrey}`,
+    color: colors.invariant.lightGrey,
+
   },
   liquidityTooltip: {
     background: colors.invariant.component,

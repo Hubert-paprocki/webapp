@@ -393,6 +393,82 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     disabled
   )
 
+  const calculateConcentration = (v: number, p1: number, p2: number) => {
+    return v * Math.abs(p1 - p2)
+  }
+
+  const calculateTransparency = concentration => {
+    // Define transparency steps and their corresponding concentration levels
+    const transparencySteps = [0.5, 0.4, 0.3, 0.2, 0.1]
+
+    // Map the concentration to the nearest step
+    const nearestStepIndex = Math.min(
+      Math.floor(concentration * (transparencySteps.length - 1)),
+      transparencySteps.length - 1
+    )
+
+    return transparencySteps[nearestStepIndex]
+  }
+
+  const heatMapLayer: Layer = ({ innerWidth, innerHeight }) => {
+    const priceRangeCount = 5 // Number of price ranges for heatmap
+    const rangeWidth = innerWidth / priceRangeCount
+    const maxHeight = innerHeight // Maximum height for each heatmap block
+
+    return (
+      <g>
+        {currentRange.slice(0, priceRangeCount).map((point, index) => {
+          const nextPoint = currentRange[index + 1] || point
+          const concentration = calculateConcentration(point.y, point.x, nextPoint.x)
+          const transparency = calculateTransparency(concentration)
+
+          const x = (point.x - plotMin) * (innerWidth / (plotMax - plotMin))
+          const height = maxHeight
+
+          return (
+            <rect
+              key={index}
+              x={x}
+              y={innerHeight - height}
+              width={rangeWidth}
+              height={height}
+              fill={`rgba(0, 255, 0, ${transparency})`}
+            />
+          )
+        })}
+      </g>
+    )
+  }
+
+  // const heatMapLayer: Layer = ({ innerWidth, innerHeight }) => {
+  //   const priceRangeCount = 5; // Number of price ranges for heatmap
+  //   const rangeWidth = innerWidth / priceRangeCount;
+
+  //   return (
+  //     <g>
+  //       {currentRange.slice(0, priceRangeCount).map((point, index) => {
+  //         const nextPoint = currentRange[index + 1] || point;
+  //         const concentration = calculateConcentration(point.y, point.x, nextPoint.x);
+  //         const transparency = calculateTransparency(concentration);
+
+  //         const x = (point.x - plotMin) * (innerWidth / (plotMax - plotMin));
+  //         const height = point.y * (innerHeight / maxVal);
+
+  //         return (
+  //           <rect
+  //             key={index}
+  //             x={x}
+  //             y={innerHeight - height}
+  //             width={rangeWidth}
+  //             height={height}
+  //             fill={`rgba(0, 255, 0, ${transparency})`}
+  //           />
+  //         );
+  //       })}
+  //     </g>
+  //   );
+  // };
+
   return (
     <Grid
       container
@@ -480,6 +556,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           lazyLoadingLayer,
           currentLayer,
           volumeRangeLayer,
+          heatMapLayer,
           brushLayer,
           'axes',
           'legends'

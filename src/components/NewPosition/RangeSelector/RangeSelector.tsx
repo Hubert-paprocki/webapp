@@ -1,4 +1,4 @@
-import { Button, Grid, Tooltip, Typography } from '@material-ui/core'
+import { Button, Grid, Switch, Tooltip, Typography } from '@material-ui/core'
 import React, { useState, useEffect, useMemo } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
@@ -20,6 +20,8 @@ import questionMark from '@static/svg/questionMark.svg'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
+import SwitchBase from '@material-ui/core/internal/SwitchBase'
+import HeatMapSwitch from '@components/HeatmapSwitch/HeatMapSwitch'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -75,6 +77,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 }) => {
   const classes = useStyles()
 
+  const [isChecked, setIsChecked] = useState(false)
+
   const [leftRange, setLeftRange] = useState(MIN_TICK)
   const [rightRange, setRightRange] = useState(MAX_TICK)
 
@@ -90,6 +94,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
 
   const [concentrationIndex, setConcentrationIndex] = useState(0)
+
+  const handleSwitchChange = () => {
+    setIsChecked(!isChecked)
+  }
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -322,14 +330,37 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
-        <Typography className={classes.header}>Price range</Typography>
-        <PlotTypeSwitch
-          onSwitch={val => {
-            setIsPlotDiscrete(val)
-            onDiscreteChange(val)
-          }}
-          initialValue={isPlotDiscrete ? 1 : 0}
-        />
+        <Typography className={classes.header}>Price range</Typography>{' '}
+        <Grid className={classes.headerContainer2}>
+          <Tooltip
+            title={
+              <>
+                <Typography className={classes.heatmapSwitchTile}>Volume Heatmap</Typography>
+
+                <Typography className={classes.liquidityDesc}>
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. A, vel, corporis ea,
+                  incidunt accusamus fugiat odio quibusdam quisquam cumque officia inventore totam
+                  dignissimos voluptatum mollitia cupiditate aut consequuntur quia! Et?
+                </Typography>
+              </>
+            }
+            placement='bottom'
+            classes={{
+              tooltip: classes.liquidityTooltip
+            }}>
+            <Typography className={classes.heatmapSwitchTileTypography}>
+              Volume Heatmap <div className={classes.volumeHeatmapIcon}>i</div>
+            </Typography>
+          </Tooltip>{' '}
+          <HeatMapSwitch onClick={handleSwitchChange} isChecked={isChecked} />
+          <PlotTypeSwitch
+            onSwitch={val => {
+              setIsPlotDiscrete(val)
+              onDiscreteChange(val)
+            }}
+            initialValue={isPlotDiscrete ? 1 : 0}
+          />
+        </Grid>
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
         <Grid>
